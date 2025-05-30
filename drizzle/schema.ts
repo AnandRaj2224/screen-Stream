@@ -71,6 +71,9 @@ export const videos = pgTable("videos", {
     .references(() => user.id, { onDelete: "cascade" }),
   views: integer("views").notNull().default(0),
   duration: integer("duration"),
+  // --- ADDED the 'tags' column, matching your Xata schema ---
+  tags: text("tags").array(),
+  // --- END ADDED ---
   createdAt: timestamp("created_at").notNull().defaultNow(),
   updatedAt: timestamp("updated_at").notNull().defaultNow(),
 });

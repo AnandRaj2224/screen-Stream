@@ -1,3 +1,4 @@
+// src/lib/actions/video.ts
 "use server";
 
 import { db } from "@/drizzle/db";
@@ -107,13 +108,28 @@ export const saveVideoDetails = withErrorHandling(
     );
 
     const now = new Date();
-    await db.insert(videos).values({
+
+    // --- CONSOLE.LOG 1: Shows data *before* insert ---
+    console.log("Attempting to save to DB with data:", {
       ...videoDetails,
       videoUrl: `${BUNNY.EMBED_URL}/${BUNNY_LIBRARY_ID}/${videoDetails.videoId}`,
       userId,
       createdAt: now,
       updatedAt: now,
     });
+    // --- END CONSOLE.LOG 1 ---
+
+    const insertResult = await db.insert(videos).values({
+      ...videoDetails,
+      videoUrl: `${BUNNY.EMBED_URL}/${BUNNY_LIBRARY_ID}/${videoDetails.videoId}`,
+      userId,
+      createdAt: now,
+      updatedAt: now,
+    });
+
+    // --- CONSOLE.LOG 2: Shows data *after* Drizzle insert returns ---
+    console.log("Drizzle insert operation result:", insertResult);
+    // --- END CONSOLE.LOG 2 ---
 
     revalidatePaths(["/"]);
     return { videoId: videoDetails.videoId };
@@ -130,16 +146,16 @@ export const getAllVideos = withErrorHandling(async (
   const currentUserId = session?.user.id;
 
   const canSeeTheVideos = or(
-      eq(videos.visibility, 'public'),
-      eq(videos.userId, currentUserId!),
+    eq(videos.visibility, 'public'),
+    eq(videos.userId, currentUserId!),
   );
 
   const whereCondition = searchQuery.trim()
-      ? and(
-          canSeeTheVideos,
-          doesTitleMatch(videos, searchQuery),
+    ? and(
+        canSeeTheVideos,
+        doesTitleMatch(videos, searchQuery),
       )
-      : canSeeTheVideos
+    : canSeeTheVideos
 
     // Count total for pagination
     const [{ totalCount }] = await db
@@ -220,7 +236,7 @@ export const getAllVideosByUser = withErrorHandling(
       .where(eq(user.id, userIdParameter));
     if (!userInfo) throw new Error("User not found");
 
-        /* eslint-disable @typescript-eslint/no-explicit-any */
+    /* eslint-disable @typescript-eslint/no-explicit-any */
     const conditions = [
       eq(videos.userId, userIdParameter),
       !isOwner && eq(videos.visibility, "public"),

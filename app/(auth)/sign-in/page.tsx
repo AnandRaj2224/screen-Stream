@@ -12,11 +12,11 @@ const SignIn = () => {
         <Link href="/">
           <Image
             src="/assets/icons/logo.svg"
-            alt="SnapChat Logo"
+            alt="Screen-Stream Logo"
             width={32}
             height={32}
           />
-          <h1>SnapCast</h1>
+          <h1>ScreenStream</h1>
         </Link>
 
         <div className="description">
@@ -33,25 +33,12 @@ const SignIn = () => {
               ))}
             </figure>
             <p>
-            SnapCast makes screen recording easy. From quick walkthroughs to
+            ScreenStream makes screen recording easy. From quick walkthroughs to
               full presentations, it&apos;s fast, smooth, and shareable in seconds
             </p>
-            <article>
-              <Image
-                src="/assets/images/jason.png"
-                alt="Jason"
-                width={64}
-                height={64}
-                className="rounded-full"
-              />
-              <div>
-                <h2>Jason Rivera</h2>
-                <p>Product Designer, NovaByte</p>
-              </div>
-            </article>
           </section>
         </div>
-        <p>© Snapcast 2025</p>
+        <p>© ScreenStream 2025</p>
       </aside>
       <aside className="google-sign-in">
         <section>
@@ -62,27 +49,27 @@ const SignIn = () => {
               width={40}
               height={40}
             />
-            <h1>SnapCast</h1>
+            <h1>ScreenStream</h1>
           </Link>
           <p>
-            Create and share your very first <span>SnapCast video</span> in no
+            Create and share your very first <span>Screen Stream video</span> in no
             time!
           </p>
 
           <button
             onClick={async () => {
               return await authClient.signIn.social({
-                provider: "google",
+                provider: "github",
               });
             }}
           >
             <Image
-              src="/assets/icons/google.svg"
-              alt="Google Icon"
-              width={22}
-              height={22}
+              src="assets\icons\icons8-github.svg"
+              alt="Github Icon"
+              width={30}
+              height={30}
             />
-            <span>Sign in with Google</span>
+            <span>Sign in with Github</span>
           </button>
         </section>
       </aside>

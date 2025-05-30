@@ -84,6 +84,7 @@ export const apiFetch = async <T = Record<string, unknown>>(
 };
 
 // Higher order function to handle errors
+// Higher order function to handle errors
 export const withErrorHandling = <T, A extends unknown[]>(
   fn: (...args: A) => Promise<T>
 ) => {
@@ -92,9 +93,26 @@ export const withErrorHandling = <T, A extends unknown[]>(
       const result = await fn(...args);
       return result;
     } catch (error) {
-      const errorMessage =
-        error instanceof Error ? error.message : "Unknown error occurred";
-      return errorMessage as unknown as T;
+      // --- START: MODIFIED ERROR HANDLING ---
+      console.error("An error occurred in a server action:");
+      console.error(error); // Log the full error object
+
+      // If it's an Error instance, log its stack for more details
+      if (error instanceof Error) {
+        console.error("Error message:", error.message);
+        console.error("Error stack:", error.stack);
+        // If there's an underlying cause, log it too (e.g., from Drizzle/Xata)
+        if ((error as any).cause) {
+          console.error("Error cause:", (error as any).cause);
+        }
+      } else {
+        // For non-Error objects, stringify to see content
+        console.error("Non-Error object:", JSON.stringify(error, null, 2));
+      }
+
+      // Re-throw the error so it's not silently swallowed
+      throw error;
+      // --- END: MODIFIED ERROR HANDLING ---
     }
   };
 };
@@ -301,7 +319,7 @@ export function daysAgo(inputDate: Date): string {
 }
 
 export const createIframeLink = (videoId: string) =>
-  `https://iframe.mediadelivery.net/embed/421422/${videoId}?autoplay=true&preload=true`;
+  `https://iframe.mediadelivery.net/embed/431337/${videoId}?autoplay=true&preload=true`;
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 export const doesTitleMatch = (videos: any, searchQuery: string) =>
